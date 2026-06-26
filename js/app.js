@@ -17,6 +17,7 @@
     { id: "matriz", icon: "📈", label: "Matriz de Decisão" },
     { id: "printfarm", icon: "🏭", label: "Print Farm" },
     { id: "consultora", icon: "🤖", label: "IA Consultora" },
+    { id: "recursos", icon: "🔗", label: "Recursos" },
     { id: "relatorio", icon: "📄", label: "Relatório Final" },
   ];
 

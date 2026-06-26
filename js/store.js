@@ -19,6 +19,7 @@
     canvas: { problema: "", segmentos: "", proposta: "", solucao: "", canais: "", receitas: "", custos: "", metricas: "", vantagem: "" },
     precificacao: { peso: 50, tempo: 3, precoKg: 120, margem: 100, posMin: 0, valorHora: 30, embalagem: 1.5, falha: 10, vidaUtil: 5000, tarifaKwh: 0.9 },
     produtos: [],
+    recursos: [],
     nichosSelecionados: [],
     estrategiasSelecionadas: [],
     canaisMarketing: [],
@@ -41,6 +42,7 @@
         canvas: { ...base.canvas, ...(parsed.canvas || {}) },
         precificacao: { ...base.precificacao, ...(parsed.precificacao || {}) },
         produtos: parsed.produtos || [],
+        recursos: parsed.recursos || [],
         printFarm: { ...base.printFarm, ...(parsed.printFarm || {}) },
       };
     } catch (e) {
@@ -119,6 +121,16 @@
 
     removeProduto(i) {
       state.produtos.splice(i, 1);
+      persist(); emit();
+    },
+
+    addRecurso(r) {
+      state.recursos.push(r);
+      persist(); emit();
+    },
+
+    removeRecurso(i) {
+      state.recursos.splice(i, 1);
       persist(); emit();
     },
 
