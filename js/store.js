@@ -1,21 +1,21 @@
 /* store.js — estado central, persistência em localStorage e pub/sub */
 (function () {
   const Planner = (window.Planner = window.Planner || {});
-  const KEY = "printPlanner2026";
+  const KEY = "printPlanner2026.v2";
 
   const defaultState = () => ({
     config: {
       capital: 0,
-      custoImpressora: 3500,
-      filamentos: 600,
-      ferramentas: 300,
-      marketing: 400,
-      reserva: 500,
-      objetivoMensal: 5000,
+      custoImpressora: 0,
+      filamentos: 0,
+      ferramentas: 0,
+      marketing: 0,
+      reserva: 0,
+      objetivoMensal: 0,
       prazoMeses: 6,
       impressoras: 1,
     },
-    impressoraSelecionada: "bambu_a1_combo",
+    impressoraSelecionada: null,
     nichosSelecionados: [],
     estrategiasSelecionadas: [],
     canaisMarketing: [],
@@ -83,19 +83,20 @@
       persist(); emit();
     },
 
-    /** Seleciona a impressora "motor" do plano e alinha o custo na calculadora */
+    /** Seleciona a impressora "motor" do plano e preenche a calculadora conforme ela */
     setImpressora(id) {
       const p = (Planner.data.impressoras || []).find((i) => i.id === id);
       if (!p) return;
       state.impressoraSelecionada = id;
-      state.config.custoImpressora = p.preco;
+      const sug = Planner.calc && Planner.calc.setupSugerido ? Planner.calc.setupSugerido(p) : {};
+      state.config = { ...state.config, custoImpressora: p.preco, ...sug };
       persist(); emit();
     },
 
-    /** Retorna o objeto da impressora selecionada (com fallback para a primeira) */
+    /** Retorna o objeto da impressora selecionada, ou null se nenhuma foi escolhida */
     getImpressora() {
       const list = Planner.data.impressoras || [];
-      return list.find((i) => i.id === state.impressoraSelecionada) || list[0];
+      return list.find((i) => i.id === state.impressoraSelecionada) || null;
     },
 
     reset() {

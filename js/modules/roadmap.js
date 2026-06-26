@@ -30,7 +30,9 @@
         nome: "Compra da impressora",
         icone: "🖨️",
         bullets: [
-          `Adquirir a ${printer.nome} (${Planner.ui.money(printer.preco)}) — ${printer.tipo}, ${printer.multicor >= 2 ? printer.multicor + " cores" : "cor única"}.`,
+          printer
+            ? `Adquirir a ${printer.nome} (${Planner.ui.money(printer.preco)}) — ${printer.tipo}, ${printer.multicor >= 2 ? printer.multicor + " cores" : "cor única"}.`
+            : "Escolher e adquirir a impressora (compare opções na aba Impressoras).",
           `Montar estoque inicial de filamento (${Planner.ui.money(s.config.filamentos)}).`,
           "Organizar bancada, ferramentas e área de pós-processamento.",
           s.config.reserva > 0 ? `Manter reserva de ${Planner.ui.money(s.config.reserva)} como capital de giro.` : "Separar uma reserva de capital de giro.",

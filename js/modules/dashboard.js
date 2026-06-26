@@ -40,7 +40,9 @@
             ${ui.kpi("Objetivo mensal", ui.money(s.config.objetivoMensal), `em ${s.config.prazoMeses} ${s.config.prazoMeses === 1 ? "mês" : "meses"}`)}
             ${ui.kpi("Investimento total", ui.money(fin.investimentoTotal), `Retorno em ${ui.meses(fin.tempoRetorno)}`)}
             ${ui.kpi("ROI estimado", `${Math.round(fin.roiAnual)}%`, "ao ano")}
-            ${ui.kpi("Impressora", `<span class="kpi-printer">${ui.escapeHtml(printer.nome)}</span>`, `${printer.tipo} · ${printer.multicor >= 2 ? printer.multicor + " cores" : "cor única"}`)}
+            ${printer
+              ? ui.kpi("Impressora", `<span class="kpi-printer">${ui.escapeHtml(printer.nome)}</span>`, `${printer.tipo} · ${printer.multicor >= 2 ? printer.multicor + " cores" : "cor única"}`)
+              : ui.kpi("Impressora", `<span class="kpi-printer muted">Nenhuma</span>`, `<a href="#impressoras">Escolher impressora</a>`)}
             ${ui.kpi("Estratégias ativas", ui.num(s.estrategiasSelecionadas.length), `de ${data.estrategias.length}`)}
           </div>
         </div>

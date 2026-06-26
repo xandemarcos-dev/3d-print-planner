@@ -8,7 +8,7 @@
     render(el) {
       const ui = Planner.ui;
       const printer = Planner.store.getImpressora();
-      const reco = printer.softwares || [];
+      const reco = printer ? printer.softwares || [] : [];
       // recomendados para a impressora primeiro, depois por prioridade
       const list = [...Planner.data.softwares].sort((a, b) =>
         (reco.includes(b.id) ? 100 : 0) + b.prioridade - ((reco.includes(a.id) ? 100 : 0) + a.prioridade)
@@ -16,7 +16,7 @@
 
       el.innerHTML = `
         ${ui.sectionTitle("Softwares", "Ferramentas de modelagem, slicing e IA — destaques conforme a sua impressora")}
-        <p class="reco-hint">⭐ Stack recomendada para a <strong>${ui.escapeHtml(printer.nome)}</strong> (inclui o slicer da marca)</p>
+        ${printer ? `<p class="reco-hint">⭐ Stack recomendada para a <strong>${ui.escapeHtml(printer.nome)}</strong> (inclui o slicer da marca)</p>` : `<p class="reco-hint">💡 <a href="#impressoras">Escolha uma impressora</a> para destacar a stack recomendada (inclui o slicer da marca).</p>`}
         <div class="card table-card">
           <table class="cmp-table">
             <thead>
@@ -41,7 +41,7 @@
             </tbody>
           </table>
         </div>
-        <div class="card">
+        ${printer ? `<div class="card">
           <h3>Stack recomendada para a ${ui.escapeHtml(printer.nome)}</h3>
           <ul class="rec-list">
             ${reco.map((id) => {
@@ -49,7 +49,7 @@
               return sw ? `<li><strong>${ui.escapeHtml(sw.nome)}</strong> — ${ui.escapeHtml(sw.finalidade)}.</li>` : "";
             }).join("")}
           </ul>
-        </div>
+        </div>` : ""}
       `;
     },
   };

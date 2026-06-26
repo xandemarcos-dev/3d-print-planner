@@ -22,15 +22,25 @@
       const fin = Planner.calc.financas(s.config);
       const printer = Planner.store.getImpressora();
 
+      const banner = printer
+        ? `<div class="card printer-banner">
+            <span class="card-icon">${printer.tipo === "Resina" ? "🧴" : "🖨️"}</span>
+            <div>
+              <strong>${ui.escapeHtml(printer.nome)} — ${ui.money(printer.preco)}</strong>
+              <p class="muted">Impressora do plano. <a href="#impressoras">Comparar e trocar</a></p>
+            </div>
+          </div>`
+        : `<div class="card printer-banner empty">
+            <span class="card-icon">🖨️</span>
+            <div>
+              <strong>Nenhuma impressora escolhida</strong>
+              <p class="muted">Escolha uma impressora para preencher os valores automaticamente. <a href="#impressoras">Ver impressoras</a></p>
+            </div>
+          </div>`;
+
       el.innerHTML = `
         ${ui.sectionTitle("Calculadora de Investimento", "Informe seus números e veja a viabilidade em tempo real")}
-        <div class="card printer-banner">
-          <span class="card-icon">${printer.tipo === "Resina" ? "🧴" : "🖨️"}</span>
-          <div>
-            <strong>${ui.escapeHtml(printer.nome)} — ${ui.money(printer.preco)}</strong>
-            <p class="muted">Impressora do plano. <a href="#impressoras">Comparar e trocar</a></p>
-          </div>
-        </div>
+        ${banner}
         <div class="two-col">
           <div class="card">
             <h3>Seus números</h3>

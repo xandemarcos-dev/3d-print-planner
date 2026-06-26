@@ -223,6 +223,8 @@ a:hover { text-decoration: underline; }
 .printer-banner { display: flex; align-items: center; gap: 14px; }
 .printer-banner .card-icon { font-size: 30px; }
 .printer-banner strong { font-size: 15px; }
+.printer-banner.empty { border-style: dashed; border-color: var(--border-2); background: var(--panel); }
+.printer-banner.empty .card-icon { opacity: 0.5; }
 .kpi-printer { font-size: 16px; line-height: 1.25; display: inline-block; }
 
 /* ===== Recomendações ===== */

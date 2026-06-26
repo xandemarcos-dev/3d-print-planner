@@ -10,13 +10,13 @@
       const ui = Planner.ui;
       const { nichos } = Planner.data;
       const printer = Planner.store.getImpressora();
-      const reco = printer.nichos || [];
+      const reco = printer ? printer.nichos || [] : [];
       // recomendados primeiro
       const ordenados = [...nichos].sort((a, b) => (reco.includes(b.id) ? 1 : 0) - (reco.includes(a.id) ? 1 : 0));
 
       el.innerHTML = `
         ${ui.sectionTitle("Escolha de Nicho", "Selecione os mercados que você quer atacar — afeta o score e o roadmap")}
-        <p class="reco-hint">⭐ Destaques recomendados para a <strong>${ui.escapeHtml(printer.nome)}</strong></p>
+        ${printer ? `<p class="reco-hint">⭐ Destaques recomendados para a <strong>${ui.escapeHtml(printer.nome)}</strong></p>` : `<p class="reco-hint">💡 <a href="#impressoras">Escolha uma impressora</a> para ver os nichos recomendados em destaque.</p>`}
         <div class="cards-grid">
           ${ordenados.map((n) => {
             const on = s.nichosSelecionados.includes(n.id);

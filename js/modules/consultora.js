@@ -13,13 +13,15 @@
     const fin = Planner.calc.financas(s.config);
     const printer = Planner.store.getImpressora();
 
-    // alerta de compatibilidade: plano multicor sem impressora multicor
+    // alerta de compatibilidade: plano multicor sem impressora multicor (ou sem impressora)
     const querMulticor =
       s.nichosSelecionados.includes("multicolor") ||
       s.estrategiasSelecionadas.includes("e_multicolor");
-    const alertaMulticor = querMulticor && printer.multicor < 2
-      ? `Você priorizou produtos multicoloridos, mas a ${printer.nome} é de cor única. Considere uma impressora com AMS/CFS (ex.: Bambu A1 Combo ou Creality K2).`
-      : null;
+    let alertaMulticor = null;
+    if (querMulticor) {
+      if (!printer) alertaMulticor = "Você priorizou produtos multicoloridos, mas ainda não escolheu uma impressora. Escolha uma com AMS/CFS (ex.: Bambu A1 Combo ou Creality K2).";
+      else if (printer.multicor < 2) alertaMulticor = `Você priorizou produtos multicoloridos, mas a ${printer.nome} é de cor única. Considere uma impressora com AMS/CFS (ex.: Bambu A1 Combo ou Creality K2).`;
+    }
 
     // Maior potencial (potencial + escalabilidade - risco)
     const melhorNicho = [...baseNichos].sort(
@@ -37,7 +39,9 @@
 
     // Próximo passo
     let proximoPasso;
-    if (s.config.capital <= 0) {
+    if (!printer) {
+      proximoPasso = "Comece escolhendo sua impressora na aba Impressoras — ela preenche custos, capacidade e recomendações.";
+    } else if (s.config.capital <= 0) {
       proximoPasso = "Defina seu capital inicial na Calculadora de Investimento para validar a viabilidade.";
     } else if (fin.saldoAposInvestir < 0) {
       proximoPasso = `Seu plano de investimento estoura o capital em ${ui.money(-fin.saldoAposInvestir)}. Reduza custos iniciais ou comece com bootstrapping.`;
@@ -68,7 +72,7 @@
           <div class="advisor-avatar">🤖</div>
           <div>
             <h3>Diagnóstico do seu plano</h3>
-            <p class="muted">Impressora: <strong>${ui.escapeHtml(a.printer.nome)}</strong> · Score: <strong>${score}/100</strong> · ${s.nichosSelecionados.length} nichos · ${s.estrategiasSelecionadas.length} estratégias · ${s.canaisMarketing.length} canais</p>
+            <p class="muted">Impressora: <strong>${a.printer ? ui.escapeHtml(a.printer.nome) : "nenhuma escolhida"}</strong> · Score: <strong>${score}/100</strong> · ${s.nichosSelecionados.length} nichos · ${s.estrategiasSelecionadas.length} estratégias · ${s.canaisMarketing.length} canais</p>
           </div>
         </div>
 

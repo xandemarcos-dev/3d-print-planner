@@ -5,6 +5,22 @@
   function clamp(n, min, max) { return Math.max(min, Math.min(max, n)); }
   function avg(arr) { return arr.length ? arr.reduce((a, b) => a + b, 0) / arr.length : 0; }
 
+  /** Sugestão de setup financeiro calculada a partir das specs da impressora */
+  function setupSugerido(p) {
+    const round = (n, step) => Math.round(n / step) * step;
+    const ehResina = p.tipo === "Resina";
+    // estoque inicial de filamento/resina: escala com a produção; multicor consome mais
+    const filamentos = ehResina ? 450 : Math.min(1200, Math.max(300, round((p.multicor >= 2 ? p.pecasMes * 7 : p.pecasMes * 5), 50)));
+    // resina exige mais consumíveis (álcool, FEP, cura)
+    const ferramentas = ehResina ? 600 : 350;
+    // meta mensal: produção × ticket, com folga de 50%, arredondada
+    const objetivoMensal = round((p.pecasMes || 0) * (p.ticket || 0) * 1.5, 100);
+    // marketing ~8% da meta; reserva ~15% do preço da impressora
+    const marketing = Math.max(300, round(objetivoMensal * 0.08, 50));
+    const reserva = Math.max(500, round(p.preco * 0.15, 100));
+    return { filamentos, ferramentas, marketing, reserva, objetivoMensal };
+  }
+
   /** Finanças derivadas da calculadora de investimento */
   function financas(config) {
     const investimentoTotal =
@@ -104,5 +120,5 @@
     return Math.round(clamp(total, 0, 100));
   }
 
-  Planner.calc = { financas, printFarm, calcularScore };
+  Planner.calc = { financas, printFarm, calcularScore, setupSugerido };
 })();

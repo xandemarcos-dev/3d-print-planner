@@ -38,35 +38,42 @@
       const selId = s.impressoraSelecionada;
       const sel = Planner.store.getImpressora();
 
-      const recoNichos = (sel.nichos || []).map((id) => nichos.find((n) => n.id === id)).filter(Boolean);
-      const recoSofts = (sel.softwares || []).map((id) => softwares.find((w) => w.id === id)).filter(Boolean);
+      const recoNichos = sel ? (sel.nichos || []).map((id) => nichos.find((n) => n.id === id)).filter(Boolean) : [];
+      const recoSofts = sel ? (sel.softwares || []).map((id) => softwares.find((w) => w.id === id)).filter(Boolean) : [];
 
       const marcas = [...new Set(impressoras.map((p) => p.marca))];
       const tipos = [...new Set(impressoras.map((p) => p.tipo))];
       const filtrada = aplicarFiltros(impressoras).sort((a, b) => a.preco - b.preco);
 
+      const recoPanel = sel
+        ? `<div class="card reco-card">
+            <h3>🎯 Recomendações para a ${ui.escapeHtml(sel.nome)}</h3>
+            <div class="reco-block">
+              <span class="reco-label">Nichos mais apropriados</span>
+              <div class="chips">
+                ${recoNichos.map((n) => {
+                  const on = s.nichosSelecionados.includes(n.id);
+                  return `<button class="chip chip-action ${on ? "chip-on" : ""}" data-addniche="${n.id}">${n.icone} ${ui.escapeHtml(n.nome)} ${on ? "✓" : "+"}</button>`;
+                }).join("")}
+              </div>
+            </div>
+            <div class="reco-block">
+              <span class="reco-label">Softwares recomendados</span>
+              <div class="chips">
+                ${recoSofts.map((w) => `<span class="chip">${ui.escapeHtml(w.nome)}${w.marca ? ` · ${w.marca}` : ""}</span>`).join("")}
+              </div>
+            </div>
+            <small class="muted">Os nichos recomendados aparecem destacados na aba <a href="#nichos">Nichos</a> e os softwares na aba <a href="#softwares">Softwares</a>.</small>
+          </div>`
+        : `<div class="card reco-card">
+            <h3>🎯 Escolha sua impressora</h3>
+            <p class="muted">Selecione uma impressora abaixo (botão "Usar no plano"). Ela vai preencher automaticamente os valores da calculadora e recomendar nichos e softwares.</p>
+          </div>`;
+
       el.innerHTML = `
         ${ui.sectionTitle("Impressoras", "Compare e escolha a impressora — ela atualiza custo, velocidade e capacidade em todo o plano")}
 
-        <div class="card reco-card">
-          <h3>🎯 Recomendações para a ${ui.escapeHtml(sel.nome)}</h3>
-          <div class="reco-block">
-            <span class="reco-label">Nichos mais apropriados</span>
-            <div class="chips">
-              ${recoNichos.map((n) => {
-                const on = s.nichosSelecionados.includes(n.id);
-                return `<button class="chip chip-action ${on ? "chip-on" : ""}" data-addniche="${n.id}">${n.icone} ${ui.escapeHtml(n.nome)} ${on ? "✓" : "+"}</button>`;
-              }).join("")}
-            </div>
-          </div>
-          <div class="reco-block">
-            <span class="reco-label">Softwares recomendados</span>
-            <div class="chips">
-              ${recoSofts.map((w) => `<span class="chip">${ui.escapeHtml(w.nome)}${w.marca ? ` · ${w.marca}` : ""}</span>`).join("")}
-            </div>
-          </div>
-          <small class="muted">Os nichos recomendados aparecem destacados na aba <a href="#nichos">Nichos</a> e os softwares na aba <a href="#softwares">Softwares</a>.</small>
-        </div>
+        ${recoPanel}
 
         <div class="card filter-bar">
           <div class="filter-row">

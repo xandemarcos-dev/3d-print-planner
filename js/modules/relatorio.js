@@ -38,8 +38,9 @@
     const estr = data.estrategias.filter((e) => s.estrategiasSelecionadas.includes(e.id));
     const canais = data.canais.filter((c) => s.canaisMarketing.includes(c.id));
     const softs = [...data.softwares].filter((sw) => sw.prioridade >= 4);
-    const recoNichos = (printer.nichos || []).map((id) => data.nichos.find((n) => n.id === id)).filter(Boolean);
-    const recoSofts = (printer.softwares || []).map((id) => data.softwares.find((w) => w.id === id)).filter(Boolean);
+    const recoNichos = printer ? (printer.nichos || []).map((id) => data.nichos.find((n) => n.id === id)).filter(Boolean) : [];
+    const recoSofts = printer ? (printer.softwares || []).map((id) => data.softwares.find((w) => w.id === id)).filter(Boolean) : [];
+    const pNome = printer ? printer.nome : "(impressora não escolhida)";
 
     // Projeção 12 meses (crescimento simples até a meta)
     const meta = s.config.objetivoMensal;
@@ -60,12 +61,12 @@
 
         <div class="report-title">
           <h2>Plano Estratégico — Negócio de Impressão 3D 2026</h2>
-          <p class="muted">${ui.escapeHtml(printer.nome)} · Score do projeto: <strong>${score}/100</strong> · Gerado em ${new Date().toLocaleDateString("pt-BR")}</p>
+          <p class="muted">${ui.escapeHtml(pNome)} · Score do projeto: <strong>${score}/100</strong> · Gerado em ${new Date().toLocaleDateString("pt-BR")}</p>
         </div>
 
         <section>
           <h3>1. Resumo Executivo</h3>
-          <p>Operação de impressão 3D iniciando com <strong>${ui.num(s.config.impressoras)}</strong> × <strong>${ui.escapeHtml(printer.nome)}</strong> (${printer.tipo}, ${printer.multicor >= 2 ? printer.multicor + " cores" : "cor única"}) e investimento total de
+          <p>Operação de impressão 3D iniciando com <strong>${ui.num(s.config.impressoras)}</strong> × <strong>${ui.escapeHtml(pNome)}</strong>${printer ? ` (${printer.tipo}, ${printer.multicor >= 2 ? printer.multicor + " cores" : "cor única"})` : ""} e investimento total de
           <strong>${ui.money(fin.investimentoTotal)}</strong>, mirando faturamento mensal de <strong>${ui.money(meta)}</strong>
           em <strong>${s.config.prazoMeses} meses</strong>. ROI estimado de <strong>${Math.round(fin.roiAnual)}%/ano</strong>,
           com retorno do investimento em <strong>${ui.meses(fin.tempoRetorno)}</strong>. Maior aposta: <strong>${ui.escapeHtml(a.melhorNicho.nome)}</strong>.</p>
@@ -73,10 +74,12 @@
 
         <section>
           <h3>2. Configuração Ideal da Impressora</h3>
+          ${printer ? `
           <p><strong>${ui.escapeHtml(printer.nome)}</strong> · ${printer.tipo} · ${printer.multicor >= 2 ? printer.multicor + " cores" : "cor única"} · ${printer.velocidade ? printer.velocidade + " mm/s" : "alta precisão"} · volume ${ui.escapeHtml(printer.volume)} · ${ui.money(printer.preco)} (${printer.loja}).</p>
           <p class="muted">${ui.escapeHtml(printer.destaque)}</p>
           <p><strong>Nichos mais apropriados:</strong> ${recoNichos.map((n) => ui.escapeHtml(n.nome)).join(", ") || "—"}.</p>
-          <p><strong>Softwares recomendados:</strong> ${recoSofts.map((w) => ui.escapeHtml(w.nome) + (w.marca ? ` (${w.marca})` : "")).join(", ") || "—"}.</p>
+          <p><strong>Softwares recomendados:</strong> ${recoSofts.map((w) => ui.escapeHtml(w.nome) + (w.marca ? ` (${w.marca})` : "")).join(", ") || "—"}.</p>`
+          : `<p class="muted">Nenhuma impressora selecionada. Escolha uma na aba Impressoras para preencher esta seção e os valores da calculadora.</p>`}
         </section>
 
         <section>

@@ -11,6 +11,20 @@
       const s = Planner.store.get();
       const ui = Planner.ui;
       const printer = Planner.store.getImpressora();
+
+      if (!printer) {
+        el.innerHTML = `
+          ${ui.sectionTitle("Print Farm", "Simule o crescimento da sua operação aumentando o número de impressoras")}
+          <div class="card printer-banner empty">
+            <span class="card-icon">🏭</span>
+            <div>
+              <strong>Escolha uma impressora primeiro</strong>
+              <p class="muted">A simulação usa a capacidade e o ticket da impressora selecionada. <a href="#impressoras">Ver impressoras</a></p>
+            </div>
+          </div>`;
+        return;
+      }
+
       const qtd = s.printFarm.qtdImpressoras;
       const sim = Planner.calc.printFarm(qtd, s.config, printer);
       const meta = s.config.objetivoMensal;
