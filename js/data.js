@@ -255,5 +255,18 @@
     p.softwares = r.softwares || [];
   });
 
+  // Dados de Lean Canvas por nicho (cliente, problema, exemplos de produto)
+  const canvasNicho = {
+    geek: { cliente: "Gamers, colecionadores e fãs de cultura pop", problema: "Querem produtos exclusivos de franquias e presentes únicos", exemplos: ["Action figures", "Suportes de controle/headset", "Chaveiros temáticos", "Troféus e placas"] },
+    miniaturas: { cliente: "Jogadores de RPG, wargames e colecionadores", problema: "Miniaturas oficiais são caras e pouco personalizáveis", exemplos: ["Miniaturas de personagens", "Terrenos e cenários", "Tokens e marcadores"] },
+    engenharia: { cliente: "Indústrias, oficinas e empresas locais", problema: "Precisam de peças funcionais, gabaritos e pequenas tiragens com agilidade", exemplos: ["Peças de reposição", "Gabaritos e suportes", "Protótipos funcionais"] },
+    pet: { cliente: "Tutores de pets e pet shops", problema: "Querem itens personalizados e exclusivos para seus animais", exemplos: ["Comedouros personalizados", "Plaquinhas de identificação", "Brinquedos", "Suportes de comedouro"] },
+    utilidades: { cliente: "Famílias e profissionais de home office", problema: "Precisam organizar e resolver pequenos problemas do dia a dia", exemplos: ["Organizadores", "Suportes e ganchos", "Porta-objetos", "Adaptadores"] },
+    multicolor: { cliente: "Consumidores que valorizam design e personalização", problema: "Produtos comuns são sem graça e iguais aos de todo mundo", exemplos: ["Itens decorativos multicoloridos", "Brindes personalizados", "Luminárias", "Placas com nome e cores"] },
+    prototipagem: { cliente: "Inventores, startups e designers", problema: "Validar uma ideia física exige fabricação cara e lenta", exemplos: ["Protótipos rápidos", "Modelos conceito", "Maquetes"] },
+    stl: { cliente: "Outros makers e donos de impressoras 3D", problema: "Faltam modelos prontos, testados e exclusivos para imprimir", exemplos: ["Arquivos STL próprios", "Kits de modelos", "Modelos paramétricos personalizáveis"] },
+  };
+  nichos.forEach((n) => { n.canvas = canvasNicho[n.id] || { cliente: "", problema: "", exemplos: [] }; });
+
   Planner.data = { nichos, estrategias, softwares, canais, impressoras };
 })();

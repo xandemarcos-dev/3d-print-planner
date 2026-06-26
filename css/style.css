@@ -259,6 +259,37 @@ a:hover { text-decoration: underline; }
 .switch input:checked + .slider { background: var(--grad); border-color: transparent; }
 .switch input:checked + .slider::before { transform: translateX(20px); background: #fff; }
 
+/* ===== Lean Canvas ===== */
+.canvas-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+.canvas-toolbar .btn { margin-top: 0; }
+.canvas-grid {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  grid-auto-rows: minmax(150px, auto);
+  grid-template-areas:
+    "problema problema solucao solucao proposta proposta vantagem vantagem segmentos segmentos"
+    "problema problema metricas metricas proposta proposta canais canais segmentos segmentos"
+    "custos custos custos custos custos receitas receitas receitas receitas receitas";
+  gap: 12px;
+  margin-bottom: 18px;
+}
+.canvas-cell { display: flex; flex-direction: column; padding: 14px; margin-bottom: 0; }
+.canvas-head { display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); margin-bottom: 10px; }
+.canvas-head .num-badge { width: 22px; height: 22px; font-size: 12px; color: #c084fc; }
+.canvas-area {
+  flex: 1; width: 100%; min-height: 96px; resize: vertical;
+  background: var(--bg); border: 1px solid var(--border); border-radius: 8px;
+  color: var(--text); font-family: inherit; font-size: 13px; line-height: 1.5; padding: 10px;
+}
+.canvas-area:focus { outline: none; border-color: var(--accent); }
+.canvas-area::placeholder { color: var(--muted); opacity: 0.6; }
+
+@media (max-width: 900px) {
+  .canvas-grid { grid-template-columns: 1fr; grid-template-areas: none; grid-auto-rows: auto; }
+  .canvas-cell { grid-area: auto !important; }
+  .canvas-area { min-height: 120px; }
+}
+
 /* ===== Timeline ===== */
 .timeline { position: relative; padding-left: 8px; }
 .tl-item { display: flex; gap: 16px; position: relative; padding-bottom: 6px; }

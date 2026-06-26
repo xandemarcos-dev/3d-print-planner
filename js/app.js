@@ -10,6 +10,7 @@
     { id: "estrategias", icon: "♟️", label: "Estratégias" },
     { id: "softwares", icon: "🧰", label: "Softwares" },
     { id: "marketing", icon: "📣", label: "Marketing" },
+    { id: "canvas", icon: "🧩", label: "Lean Canvas" },
     { id: "roadmap", icon: "🛣️", label: "Roadmap" },
     { id: "matriz", icon: "📈", label: "Matriz de Decisão" },
     { id: "printfarm", icon: "🏭", label: "Print Farm" },

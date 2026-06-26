@@ -16,6 +16,7 @@
       impressoras: 1,
     },
     impressoraSelecionada: null,
+    canvas: { problema: "", segmentos: "", proposta: "", solucao: "", canais: "", receitas: "", custos: "", metricas: "", vantagem: "" },
     nichosSelecionados: [],
     estrategiasSelecionadas: [],
     canaisMarketing: [],
@@ -35,6 +36,7 @@
         ...base,
         ...parsed,
         config: { ...base.config, ...(parsed.config || {}) },
+        canvas: { ...base.canvas, ...(parsed.canvas || {}) },
         printFarm: { ...base.printFarm, ...(parsed.printFarm || {}) },
       };
     } catch (e) {
@@ -83,6 +85,13 @@
     setPrintFarm(qtd) {
       state.printFarm.qtdImpressoras = qtd;
       persist(); emit();
+    },
+
+    /** Atualiza blocos do Lean Canvas. silent=true não re-renderiza (para edição inline). */
+    setCanvas(patch, silent) {
+      state.canvas = { ...state.canvas, ...patch };
+      persist();
+      if (!silent) emit();
     },
 
     /** Seleciona a impressora "motor" do plano e preenche a calculadora conforme ela */
