@@ -59,24 +59,36 @@
     };
   }
 
-  /** Simulação de print farm para uma quantidade de impressoras (usa a impressora escolhida) */
-  function printFarm(qtd, config, printer) {
-    // premissas vêm da impressora selecionada (capacidade e ticket médio)
-    const pecasMesPorImpressora = printer && printer.pecasMes ? printer.pecasMes : 90;
-    const ticketMedio = printer && printer.ticket ? printer.ticket : 35;
-    const margem = 0.6;
+  /** Simulação de print farm. Se houver catálogo de produtos, usa as médias reais dele;
+   *  senão, cai nas premissas da impressora selecionada. */
+  function printFarm(qtd, config, printer, produtos) {
+    const HORAS_MES = 200; // horas produtivas/mês por máquina (operação ativa em casa)
+    const baseCatalogo = !!(produtos && produtos.length);
+
+    let pecasMesPorImpressora, ticketMedio, lucroPorPeca;
+    if (baseCatalogo) {
+      const avg = (k) => produtos.reduce((a, p) => a + (p[k] || 0), 0) / produtos.length;
+      const avgTempo = avg("tempo");
+      ticketMedio = avg("preco");
+      lucroPorPeca = avg("lucro");
+      pecasMesPorImpressora = avgTempo > 0 ? HORAS_MES / avgTempo : 0;
+    } else {
+      pecasMesPorImpressora = printer && printer.pecasMes ? printer.pecasMes : 90;
+      ticketMedio = printer && printer.ticket ? printer.ticket : 35;
+      lucroPorPeca = null;
+    }
 
     const producaoMensal = pecasMesPorImpressora * qtd;
     const faturamento = producaoMensal * ticketMedio;
-    const custoVariavel = faturamento * (1 - margem);
     const custoFixo = 150 * qtd; // energia + manutenção por máquina
-    const lucro = faturamento - custoVariavel - custoFixo;
+    const lucro = lucroPorPeca != null
+      ? producaoMensal * lucroPorPeca - custoFixo
+      : faturamento * 0.6 - custoFixo; // margem 60% quando sem catálogo
 
-    // tempo (meses) para juntar o custo de uma nova impressora reinvestindo o lucro
     const custoNovaImpressora = config.custoImpressora || 3500;
     const tempoExpansao = lucro > 0 ? custoNovaImpressora / lucro : Infinity;
 
-    return { producaoMensal, faturamento, lucro, tempoExpansao };
+    return { producaoMensal, faturamento, lucro, tempoExpansao, baseCatalogo };
   }
 
   /** Score geral 0–100 combinando completude + qualidade das escolhas + viabilidade */

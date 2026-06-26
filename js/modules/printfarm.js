@@ -26,7 +26,7 @@
       }
 
       const qtd = s.printFarm.qtdImpressoras;
-      const sim = Planner.calc.printFarm(qtd, s.config, printer);
+      const sim = Planner.calc.printFarm(qtd, s.config, printer, s.produtos);
       const meta = s.config.objetivoMensal;
       const atingeMeta = sim.faturamento >= meta;
 
@@ -58,7 +58,7 @@
             <thead><tr><th>Impressoras</th><th>Produção/mês</th><th>Faturamento</th><th>Lucro</th><th>Meta</th></tr></thead>
             <tbody>
               ${OPCOES.map((o) => {
-                const r = Planner.calc.printFarm(o, s.config, printer);
+                const r = Planner.calc.printFarm(o, s.config, printer, s.produtos);
                 const ok = r.faturamento >= meta;
                 return `<tr class="${o === qtd ? "row-active" : ""}">
                   <td><strong>${o}</strong></td>
@@ -70,7 +70,9 @@
               }).join("")}
             </tbody>
           </table>
-          <small class="muted">Premissas (${ui.escapeHtml(printer.nome)}): ~${printer.pecasMes} peças/mês por máquina, ticket médio ${ui.money(printer.ticket)}, margem 60%.</small>
+          <small class="muted">${sim.baseCatalogo
+            ? `Base: seu <a href="#catalogo">catálogo</a> de ${s.produtos.length} produto(s) — médias reais de tempo, preço e lucro, ~200h/mês por máquina.`
+            : `Premissas (${ui.escapeHtml(printer.nome)}): ~${printer.pecasMes} peças/mês por máquina, ticket médio ${ui.money(printer.ticket)}, margem 60%. Salve produtos no <a href="#catalogo">catálogo</a> para um cálculo real.`}</small>
         </div>
       `;
 

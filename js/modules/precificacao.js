@@ -162,7 +162,7 @@
         if (!nome) { el.querySelector("#prodNome").focus(); return; }
         const st = Planner.store.get();
         const c = calcular(st, Planner.store.getImpressora());
-        Planner.store.addProduto({ nome, peso: st.precificacao.peso, tempo: st.precificacao.tempo, custo: c.custoReal, preco: c.precoBase, lucro: c.lucro });
+        Planner.store.addProduto({ nome, categoria: "Outros", procura: 3, peso: st.precificacao.peso, tempo: st.precificacao.tempo, custo: c.custoReal, preco: c.precoBase, lucro: c.lucro });
       });
 
       el.querySelectorAll("button[data-del]").forEach((b) =>

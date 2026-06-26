@@ -110,6 +110,13 @@
       persist(); emit();
     },
 
+    updateProduto(i, patch) {
+      if (state.produtos[i]) {
+        state.produtos[i] = { ...state.produtos[i], ...patch };
+        persist(); emit();
+      }
+    },
+
     removeProduto(i) {
       state.produtos.splice(i, 1);
       persist(); emit();

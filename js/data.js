@@ -268,5 +268,12 @@
   };
   nichos.forEach((n) => { n.canvas = canvasNicho[n.id] || { cliente: "", problema: "", exemplos: [] }; });
 
-  Planner.data = { nichos, estrategias, softwares, canais, impressoras };
+  // Categorias do catálogo de produtos (baseadas na "biblioteca de produtos")
+  const categoriasProduto = [
+    "Geek", "Gamer", "Organização", "Escritório", "Automotivo",
+    "Pet", "Ferramentas", "Casa inteligente", "Jardinagem",
+    "Acessórios 3D", "Reposição", "Outros",
+  ];
+
+  Planner.data = { nichos, estrategias, softwares, canais, impressoras, categoriasProduto };
 })();
