@@ -42,6 +42,24 @@
     const recoSofts = printer ? (printer.softwares || []).map((id) => data.softwares.find((w) => w.id === id)).filter(Boolean) : [];
     const pNome = printer ? printer.nome : "(impressora não escolhida)";
 
+    // Lean Canvas: usa o que o usuário editou, senão a sugestão gerada
+    const canvasGen = Planner.modules.canvas.gerar(s);
+    const canvasTexto = (key) => {
+      const edit = (s.canvas && s.canvas[key] || "").trim();
+      return edit || canvasGen[key] || "—";
+    };
+    const canvasBlocos = [
+      { key: "problema", n: 1, nome: "Problema" },
+      { key: "segmentos", n: 2, nome: "Segmento de Clientes" },
+      { key: "proposta", n: 3, nome: "Proposta de Valor" },
+      { key: "solucao", n: 4, nome: "Solução" },
+      { key: "canais", n: 5, nome: "Canais" },
+      { key: "receitas", n: 6, nome: "Receitas" },
+      { key: "custos", n: 7, nome: "Estrutura de Custos" },
+      { key: "metricas", n: 8, nome: "Métricas-Chave" },
+      { key: "vantagem", n: 9, nome: "Vantagem Injusta" },
+    ];
+
     // Projeção 12 meses (crescimento simples até a meta)
     const meta = s.config.objetivoMensal;
     const proj = [];
@@ -125,6 +143,17 @@
             ${li(`Mitigar o risco principal: ${a.maiorRiscoNicho.riscos}`)}
             ${li("Configurar gravação de timelapses desde a primeira impressão.")}
           </ul>
+        </section>
+
+        <section>
+          <h3>10. Lean Canvas (modelo de negócio em 1 página)</h3>
+          <div class="rep-canvas">
+            ${canvasBlocos.map((b) => `
+              <div class="rep-canvas-cell">
+                <strong>${b.n}. ${ui.escapeHtml(b.nome)}</strong>
+                <p>${ui.escapeHtml(canvasTexto(b.key))}</p>
+              </div>`).join("")}
+          </div>
         </section>
       </div>
     `;

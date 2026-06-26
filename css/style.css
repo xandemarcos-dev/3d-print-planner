@@ -342,6 +342,12 @@ a:hover { text-decoration: underline; }
 .report-actions { display: flex; justify-content: flex-end; margin-bottom: 8px; }
 .rep-phase { margin: 12px 0; }
 .rep-phase ul { margin-top: 4px; }
+.rep-canvas { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 10px; }
+.rep-canvas-cell { border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; }
+.rep-canvas-cell strong { display: block; font-size: 12px; text-transform: uppercase; letter-spacing: 0.03em; color: var(--accent-2); margin-bottom: 6px; }
+.rep-canvas-cell p { font-size: 12.5px; white-space: pre-line; margin: 0; }
+@media (max-width: 768px) { .rep-canvas { grid-template-columns: 1fr; } }
+@media print { .rep-canvas { grid-template-columns: repeat(3, 1fr); } .rep-canvas-cell { border-color: #ccc; } .rep-canvas-cell strong { color: #000; } }
 
 /* ===== Responsive ===== */
 @media (max-width: 980px) {
