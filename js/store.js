@@ -17,6 +17,8 @@
     },
     impressoraSelecionada: null,
     canvas: { problema: "", segmentos: "", proposta: "", solucao: "", canais: "", receitas: "", custos: "", metricas: "", vantagem: "" },
+    precificacao: { peso: 50, tempo: 3, precoKg: 120, margem: 100, posMin: 0, valorHora: 30, embalagem: 1.5, falha: 10, vidaUtil: 5000, tarifaKwh: 0.9 },
+    produtos: [],
     nichosSelecionados: [],
     estrategiasSelecionadas: [],
     canaisMarketing: [],
@@ -37,6 +39,8 @@
         ...parsed,
         config: { ...base.config, ...(parsed.config || {}) },
         canvas: { ...base.canvas, ...(parsed.canvas || {}) },
+        precificacao: { ...base.precificacao, ...(parsed.precificacao || {}) },
+        produtos: parsed.produtos || [],
         printFarm: { ...base.printFarm, ...(parsed.printFarm || {}) },
       };
     } catch (e) {
@@ -92,6 +96,23 @@
       state.canvas = { ...state.canvas, ...patch };
       persist();
       if (!silent) emit();
+    },
+
+    /** Atualiza inputs da calculadora de precificação. silent=true não re-renderiza. */
+    setPrecificacao(patch, silent) {
+      state.precificacao = { ...state.precificacao, ...patch };
+      persist();
+      if (!silent) emit();
+    },
+
+    addProduto(prod) {
+      state.produtos.push(prod);
+      persist(); emit();
+    },
+
+    removeProduto(i) {
+      state.produtos.splice(i, 1);
+      persist(); emit();
     },
 
     /** Seleciona a impressora "motor" do plano e preenche a calculadora conforme ela */

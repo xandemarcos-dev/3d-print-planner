@@ -6,6 +6,7 @@
     { id: "dashboard", icon: "📊", label: "Dashboard" },
     { id: "investimento", icon: "💰", label: "Investimento" },
     { id: "impressoras", icon: "🖨️", label: "Impressoras" },
+    { id: "precificacao", icon: "💲", label: "Precificação" },
     { id: "nichos", icon: "🎯", label: "Nichos" },
     { id: "estrategias", icon: "♟️", label: "Estratégias" },
     { id: "softwares", icon: "🧰", label: "Softwares" },

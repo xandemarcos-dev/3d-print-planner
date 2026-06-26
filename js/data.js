@@ -129,15 +129,15 @@
 
   // Canais: dificuldade / custo / alcance / roiEstimado (1–5)
   const canais = [
-    { id: "shopee", nome: "Shopee", icone: "🛒", dificuldade: 2, custo: 2, alcance: 5, roiEstimado: 4,
+    { id: "shopee", nome: "Shopee", icone: "🛒", dificuldade: 2, custo: 2, alcance: 5, roiEstimado: 4, taxa: 0.20,
       nota: "Alto tráfego e público que compra por impulso. Concorrência por preço é forte." },
-    { id: "mercadolivre", nome: "Mercado Livre", icone: "📦", dificuldade: 3, custo: 3, alcance: 5, roiEstimado: 4,
+    { id: "mercadolivre", nome: "Mercado Livre", icone: "📦", dificuldade: 3, custo: 3, alcance: 5, roiEstimado: 4, taxa: 0.16,
       nota: "Ótimo para ticket médio/alto e itens funcionais. Boa reputação = mais vendas." },
-    { id: "instagram", nome: "Instagram", icone: "📸", dificuldade: 3, custo: 2, alcance: 4, roiEstimado: 3,
+    { id: "instagram", nome: "Instagram", icone: "📸", dificuldade: 3, custo: 2, alcance: 4, roiEstimado: 3, taxa: 0,
       nota: "Vitrine visual e vendas diretas. Exige constância de conteúdo." },
-    { id: "tiktok", nome: "TikTok", icone: "🎵", dificuldade: 2, custo: 1, alcance: 5, roiEstimado: 5,
+    { id: "tiktok", nome: "TikTok", icone: "🎵", dificuldade: 2, custo: 1, alcance: 5, roiEstimado: 5, taxa: 0,
       nota: "Timelapses viralizam com facilidade. Maior potencial de alcance orgânico." },
-    { id: "youtube", nome: "YouTube", icone: "▶️", dificuldade: 4, custo: 2, alcance: 4, roiEstimado: 3,
+    { id: "youtube", nome: "YouTube", icone: "▶️", dificuldade: 4, custo: 2, alcance: 4, roiEstimado: 3, taxa: 0,
       nota: "Autoridade de longo prazo e tráfego recorrente. Retorno mais lento." },
   ];
 
