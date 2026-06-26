@@ -14,12 +14,29 @@
     { key: "prazoMeses", label: "Prazo para atingir a meta (meses)", help: "", suffix: true },
   ];
 
+  // HTML interno do painel de Resultados (regenerado sozinho, sem tocar nos inputs)
+  function resultadosInner(s) {
+    const ui = Planner.ui;
+    const fin = Planner.calc.financas(s.config);
+    return `
+      <h3>Resultados</h3>
+      <div class="result-row"><span>Investimento total</span><strong>${ui.money(fin.investimentoTotal)}</strong></div>
+      <div class="result-row"><span>Saldo após investir</span><strong class="${fin.saldoAposInvestir < 0 ? "neg" : "pos"}">${ui.money(fin.saldoAposInvestir)}</strong></div>
+      <div class="result-row"><span>Ponto de equilíbrio (faturamento/mês)</span><strong>${ui.money(fin.pontoEquilibrio)}</strong></div>
+      <div class="result-row"><span>Lucro líquido mensal estimado</span><strong>${ui.money(fin.lucroLiquidoMensal)}</strong></div>
+      <div class="result-row"><span>ROI estimado (ano)</span><strong>${Math.round(fin.roiAnual)}%</strong></div>
+      <div class="result-row"><span>Tempo de retorno</span><strong>${ui.meses(fin.tempoRetorno)}</strong></div>
+      ${fin.saldoAposInvestir < 0
+        ? `<p class="alert neg">⚠️ O investimento total ultrapassa seu capital em ${ui.money(-fin.saldoAposInvestir)}.</p>`
+        : `<p class="alert pos">✅ Investimento cabe no seu capital, com folga de ${ui.money(fin.saldoAposInvestir)}.</p>`}
+      <small class="muted">Estimativas com margem de lucro de 60%. Ajuste seus números para refinar.</small>`;
+  }
+
   M.investimento = {
     title: "Calculadora de Investimento",
     render(el) {
       const s = Planner.store.get();
       const ui = Planner.ui;
-      const fin = Planner.calc.financas(s.config);
       const printer = Planner.store.getImpressora();
 
       const banner = printer
@@ -57,26 +74,17 @@
             </div>
           </div>
 
-          <div class="card results-card">
-            <h3>Resultados</h3>
-            <div class="result-row"><span>Investimento total</span><strong>${ui.money(fin.investimentoTotal)}</strong></div>
-            <div class="result-row"><span>Saldo após investir</span><strong class="${fin.saldoAposInvestir < 0 ? "neg" : "pos"}">${ui.money(fin.saldoAposInvestir)}</strong></div>
-            <div class="result-row"><span>Ponto de equilíbrio (faturamento/mês)</span><strong>${ui.money(fin.pontoEquilibrio)}</strong></div>
-            <div class="result-row"><span>Lucro líquido mensal estimado</span><strong>${ui.money(fin.lucroLiquidoMensal)}</strong></div>
-            <div class="result-row"><span>ROI estimado (ano)</span><strong>${Math.round(fin.roiAnual)}%</strong></div>
-            <div class="result-row"><span>Tempo de retorno</span><strong>${ui.meses(fin.tempoRetorno)}</strong></div>
-            ${fin.saldoAposInvestir < 0
-              ? `<p class="alert neg">⚠️ O investimento total ultrapassa seu capital em ${ui.money(-fin.saldoAposInvestir)}.</p>`
-              : `<p class="alert pos">✅ Investimento cabe no seu capital, com folga de ${ui.money(fin.saldoAposInvestir)}.</p>`}
-            <small class="muted">Estimativas com margem de lucro de 60%. Ajuste seus números para refinar.</small>
-          </div>
+          <div class="card results-card">${resultadosInner(s)}</div>
         </div>
       `;
 
+      const results = el.querySelector(".results-card");
       el.querySelectorAll("input[data-key]").forEach((inp) => {
         inp.addEventListener("input", () => {
           const v = parseFloat(inp.value) || 0;
-          Planner.store.setConfig({ [inp.dataset.key]: v });
+          // silent=true: persiste sem reconstruir os inputs (mantém o cursor no lugar)
+          Planner.store.setConfig({ [inp.dataset.key]: v }, true);
+          results.innerHTML = resultadosInner(Planner.store.get());
         });
       });
     },

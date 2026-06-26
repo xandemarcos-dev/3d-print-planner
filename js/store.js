@@ -60,10 +60,12 @@
   const store = {
     get() { return state; },
 
-    /** Atualiza config (merge raso) */
-    setConfig(patch) {
+    /** Atualiza config (merge raso). Se silent=true, persiste sem re-renderizar a view
+     *  (usado pela calculadora para não reconstruir os inputs e perder o cursor). */
+    setConfig(patch, silent) {
       state.config = { ...state.config, ...patch };
-      persist(); emit();
+      persist();
+      if (!silent) emit();
     },
 
     /** Liga/desliga um id em uma lista (nichos/estrategias/canais) */
