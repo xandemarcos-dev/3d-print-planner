@@ -28,6 +28,16 @@
       const porCategoria = {};
       produtos.forEach((p) => { porCategoria[p.categoria || "Outros"] = (porCategoria[p.categoria || "Outros"] || 0) + 1; });
 
+      // Score de produto = lucro/hora × procura → o que merece estoque/anúncio/escala
+      const scored = produtos.map((p, i) => {
+        const lh = p.tempo > 0 ? p.lucro / p.tempo : 0;
+        return { p, i, lh, raw: lh * (p.procura || 3) };
+      });
+      const maxRaw = Math.max.apply(null, scored.map((x) => x.raw).concat([0]));
+      scored.forEach((x) => { x.score = maxRaw > 0 ? Math.round((x.raw / maxRaw) * 100) : 0; });
+      const ordenado = scored.slice().sort((a, b) => b.score - a.score);
+      const campeoes = ordenado.filter((x) => x.score >= 70);
+
       el.innerHTML = `
         ${ui.sectionTitle("Catálogo de Produtos", "Sua biblioteca de produtos — registre tempo, custo, preço, margem e procura de cada peça")}
 
@@ -51,14 +61,24 @@
           <small class="muted" style="display:block;margin-top:8px">Custo e preço são calculados com os parâmetros da aba <a href="#precificacao">Precificação</a> (filamento, margem, etc.).</small>
         </div>
 
+        ${n ? `
+        <div class="card reco-card">
+          <h3>🏆 Onde focar estoque e anúncios</h3>
+          ${campeoes.length
+            ? `<p>Priorize: ${campeoes.slice(0, 3).map((x) => `<strong>${ui.escapeHtml(x.p.nome)}</strong>`).join(", ")} — melhor <em>lucro por hora ponderado pela procura</em>. São os candidatos a estoque, anúncios e escala.</p>`
+            : `<p class="muted">Ajuste a procura dos produtos para destacar os campeões.</p>`}
+          <small class="muted">Score = (lucro ÷ hora de impressão) × procura, relativo ao melhor produto do catálogo.</small>
+        </div>` : ""}
+
         <div class="card table-card">
           <h3>Produtos ${n ? `(${n})` : ""}</h3>
           ${n ? `
             <table class="cmp-table catalogo-table">
-              <thead><tr><th>Produto</th><th>Categoria</th><th>Procura</th><th>Peso</th><th>Tempo</th><th>Custo</th><th>Preço</th><th>Lucro</th><th>R$/h</th><th></th></tr></thead>
+              <thead><tr><th>Score</th><th>Produto</th><th>Categoria</th><th>Procura</th><th>Peso</th><th>Tempo</th><th>Custo</th><th>Preço</th><th>Lucro</th><th>R$/h</th><th></th></tr></thead>
               <tbody>
-                ${produtos.map((p, i) => `<tr>
-                  <td><strong>${ui.escapeHtml(p.nome)}</strong></td>
+                ${ordenado.map((x) => { const p = x.p; const i = x.i; const camp = x.score >= 70; return `<tr class="${camp ? "row-active" : ""}">
+                  <td>${ui.badge(String(x.score), x.score / 20)}</td>
+                  <td><strong>${camp ? "⭐ " : ""}${ui.escapeHtml(p.nome)}</strong></td>
                   <td><span class="tag-marca">${ui.escapeHtml(p.categoria || "Outros")}</span></td>
                   <td>
                     <select class="mini-select" data-procura="${i}">
@@ -72,10 +92,10 @@
                   <td class="pos">${ui.moneyCents(p.lucro)}</td>
                   <td>${p.tempo > 0 ? ui.moneyCents(p.lucro / p.tempo) : "—"}</td>
                   <td><button class="btn btn-sm btn-ghost" data-del="${i}">✕</button></td>
-                </tr>`).join("")}
+                </tr>`; }).join("")}
               </tbody>
             </table>
-            <small class="muted">Estes produtos alimentam a simulação da <a href="#printfarm">Print Farm</a> (médias reais em vez de estimativa).</small>
+            <small class="muted">Ordenado por score. Estes produtos alimentam a simulação da <a href="#printfarm">Print Farm</a> (médias reais em vez de estimativa).</small>
           ` : `<p class="muted">Nenhum produto ainda. Adicione acima ou salve direto pela aba <a href="#precificacao">Precificação</a>.</p>`}
         </div>
       `;

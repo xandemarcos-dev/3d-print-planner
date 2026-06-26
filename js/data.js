@@ -249,6 +249,11 @@
     elegoo_centauri_carbon:{ nichos: ["engenharia", "prototipagem", "geek", "utilidades"], softwares: ["orca", "fusion", "claude"] },
     elegoo_mars5_ultra:    { nichos: ["miniaturas", "prototipagem", "geek"],             softwares: ["chitubox", "blender", "meshy", "luma"] },
   };
+  // Blender no caminho de modelagem (orgânica/artística) das impressoras FDM multicolor
+  ["bambu_a1_combo", "bambu_a1_mini_combo", "bambu_p1s_combo", "bambu_x1c_combo", "bambu_h2d_combo", "bambu_p2s_combo", "bambu_x1e_combo", "creality_k2_cfs"].forEach((id) => {
+    if (reco[id] && reco[id].softwares.indexOf("blender") === -1) reco[id].softwares.push("blender");
+  });
+
   impressoras.forEach((p) => {
     const r = reco[p.id] || {};
     p.nichos = r.nichos || [];
